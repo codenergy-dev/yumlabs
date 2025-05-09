@@ -30,15 +30,20 @@ cd yumlabs
 
 git clone https://github.com/codenergy-dev/pypeyuml.git
 
-./setup/venv.sh
+# Required for most pipelines
+python3 -m venv venv
+./venv/bin/pip install -r requirements/venv.txt
 
 # Required for image_segmentation_pipeline and video_segmentation_pipeline
-./setup/ben2.sh
+python3 -m venv ben2
+./ben2/bin/pip install -r requirements/ben2.txt
 
 # Required for image_restoration_pipeline
-./setup/realesrgan.sh
+python3 -m venv realesrgan
+./realesrgan/bin/pip install -r requirements/realesrgan.txt
 
 # First create a yUML workflow
+source ./venv/bin/activate
 python3 ./pypeyuml/main.py ./yuml/resize_image.yuml ./pipelines
 ```
 
