@@ -40,31 +40,33 @@ def auto_pipeline(
   clip_skip: int = None,
   sampler: str = 'unipc',
   device: str = 'cuda',
+  torch_dtype: str = 'float16',
   **kwargs,
 ):
+  torch_dtype = torch.float16 if torch_dtype == 'float16' else torch.float32
   controlnet_model = []
   if isinstance(controlnet, str):
     controlnet = controlnet.split(',')
   for index in range(len(controlnet)):
     preprocessor = controlnet[index]
     if 'anyline' in preprocessor:
-      controlnet_model.append(ControlNetModel.from_pretrained("TheMistoAI/MistoLine", variant="fp16", torch_dtype=torch.float32, use_safetensors=True))
+      controlnet_model.append(ControlNetModel.from_pretrained("TheMistoAI/MistoLine", variant="fp16", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'canny' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
-      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch.float32, use_safetensors=True))
+      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'hed' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
-      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-hed", torch_dtype=torch.float32, use_safetensors=True))
+      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-hed", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'pose' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
-      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-openpose", torch_dtype=torch.float32, use_safetensors=True))
+      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-openpose", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'zoe' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
-      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-depth", torch_dtype=torch.float32, use_safetensors=True))
+      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-depth", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'canny' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
-      controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch.float32, use_safetensors=True))
+      controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'hed' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
-      controlnet_model.append(ControlNetModel.from_pretrained("Eugeoter/noob-sdxl-controlnet-softedge_hed", torch_dtype=torch.float32, use_safetensors=True))
+      controlnet_model.append(ControlNetModel.from_pretrained("Eugeoter/noob-sdxl-controlnet-softedge_hed", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'pose' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
-      controlnet_model.append(ControlNetModel.from_pretrained("thibaud/controlnet-openpose-sdxl-1.0", torch_dtype=torch.float32))
+      controlnet_model.append(ControlNetModel.from_pretrained("thibaud/controlnet-openpose-sdxl-1.0", torch_dtype=torch_dtype))
     elif 'zoe' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
-      controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-zoe-depth-sdxl-1.0", torch_dtype=torch.float32, use_safetensors=True))
+      controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-zoe-depth-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
     else:
       controlnet[index] = None
   controlnet = [preprocessor for preprocessor in controlnet if preprocessor is not None]
@@ -73,11 +75,11 @@ def auto_pipeline(
   if len(controlnet):
     pipe_kwargs["controlnet"] = controlnet_model
   if model == "stabilityai/stable-diffusion-xl-base-1.0":
-    pipe_kwargs["vae"] = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float32, use_safetensors=True)
+    pipe_kwargs["vae"] = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch_dtype, use_safetensors=True)
   
   pipe = (AutoPipelineForImage2Image if image is not None else AutoPipelineForText2Image).from_pretrained(
     model,
-    torch_dtype=torch.float32,
+    torch_dtype=torch_dtype,
     use_safetensors=True if model != "admruul/anything-v3.0" else False,
     safety_checker=None,
     **pipe_kwargs,
