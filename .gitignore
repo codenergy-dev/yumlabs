@@ -1,3 +1,11 @@
+# Pypeyuml
+pypeyuml/
+
+# venv
+venv/
+ben2/
+realesrgan/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
