@@ -1,3 +1,4 @@
+-e git+https://github.com/sberbank-ai/Real-ESRGAN.git@362a0316878f41dbdfbb23657b450c3353de5acf#egg=RealESRGAN
 absl-py==2.2.2
 addict==2.4.0
 basicsr==1.4.2
@@ -36,7 +37,6 @@ protobuf==6.30.2
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
 PyYAML==6.0.2
-RealESRGAN==1.0
 requests==2.32.3
 scikit-image==0.25.2
 scipy==1.15.2
