@@ -39,6 +39,7 @@ def auto_pipeline(
   control_guidance_end: float = 1.0,
   clip_skip: int = None,
   sampler: str = 'unipc',
+  device: str = 'cuda',
   **kwargs,
 ):
   controlnet_model = []
@@ -80,7 +81,7 @@ def auto_pipeline(
     use_safetensors=True if model != "admruul/anything-v3.0" else False,
     safety_checker=None,
     **pipe_kwargs,
-  )
+  ).to(device)
 
   if lora is not None:
     for lora in lora.split(','):
