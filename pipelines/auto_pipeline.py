@@ -1,22 +1,11 @@
 import math
 import os
-from diffusers import (
-  AutoencoderKL,
-  AutoPipelineForImage2Image,
-  AutoPipelineForText2Image,
-  ControlNetModel,
-  DEISMultistepScheduler,
-  DDIMScheduler,
-  DDPMScheduler,
-  DPMSolverMultistepScheduler,
-  EulerDiscreteScheduler,
-  UniPCMultistepScheduler,
-)
 from PIL import Image, PngImagePlugin
 import torch
 import random
 
 def auto_pipeline(
+  pipe,
   model: str,
   prompt: str,
   negative_prompt: str = None,
@@ -37,90 +26,8 @@ def auto_pipeline(
   controlnet_conditioning_scale: float = 0.5,
   control_guidance_start: float = 0.0,
   control_guidance_end: float = 1.0,
-  clip_skip: int = None,
-  sampler: str = 'unipc',
-  device: str = 'cuda',
-  torch_dtype: str = 'float16',
   **kwargs,
 ):
-  torch_dtype = torch.float16 if torch_dtype == 'float16' else torch.float32
-  controlnet_model = []
-  if isinstance(controlnet, str):
-    controlnet = controlnet.split(',')
-  for index in range(len(controlnet)):
-    preprocessor = controlnet[index]
-    if 'anyline' in preprocessor:
-      controlnet_model.append(ControlNetModel.from_pretrained("TheMistoAI/MistoLine", variant="fp16", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'canny' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
-      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'hed' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
-      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-hed", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'pose' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
-      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-openpose", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'zoe' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
-      controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-depth", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'canny' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
-      controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'hed' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
-      controlnet_model.append(ControlNetModel.from_pretrained("Eugeoter/noob-sdxl-controlnet-softedge_hed", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'pose' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
-      controlnet_model.append(ControlNetModel.from_pretrained("thibaud/controlnet-openpose-sdxl-1.0", torch_dtype=torch_dtype))
-    elif 'zoe' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
-      controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-zoe-depth-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
-    else:
-      controlnet[index] = None
-  controlnet = [preprocessor for preprocessor in controlnet if preprocessor is not None]
-    
-  pipe_kwargs = {}
-  if len(controlnet):
-    pipe_kwargs["controlnet"] = controlnet_model
-  if model == "stabilityai/stable-diffusion-xl-base-1.0":
-    pipe_kwargs["vae"] = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch_dtype, use_safetensors=True)
-  
-  pipe = (AutoPipelineForImage2Image if image is not None else AutoPipelineForText2Image).from_pretrained(
-    model,
-    torch_dtype=torch_dtype,
-    use_safetensors=True if model != "admruul/anything-v3.0" else False,
-    safety_checker=None,
-    **pipe_kwargs,
-  ).to(device)
-
-  if lora is not None:
-    for lora in lora.split(','):
-      pipe.load_lora_weights(lora)
-  
-  if clip_skip is not None and hasattr(pipe, "text_encoder") and hasattr(pipe.text_encoder.config, "clip_skip"):
-    pipe.text_encoder.config.clip_skip = clip_skip
-
-  if sampler == "ddim":
-    pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
-  elif sampler == "euler":
-    pipe.scheduler = EulerDiscreteScheduler.from_config(pipe.scheduler.config)
-  elif sampler == "dpmpp-2m":
-    pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-    pipe.scheduler.algorithm_type = "dpmsolver++"
-    pipe.scheduler.use_karras_sigmas = False
-  elif sampler == "dpmpp-2m-karras":
-    pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-    pipe.scheduler.algorithm_type = "dpmsolver++"
-    pipe.scheduler.use_karras_sigmas = True
-  elif sampler == "dpmpp-2m-sde":
-    pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-    pipe.scheduler.algorithm_type = "sde-dpmsolver++"
-    pipe.scheduler.use_karras_sigmas = False
-  elif sampler == "dpmpp-2m-sde-karras":
-    pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-    pipe.scheduler.algorithm_type = "sde-dpmsolver++"
-    pipe.scheduler.use_karras_sigmas = True
-  elif sampler == "ddpm":
-    pipe.scheduler = DDPMScheduler.from_config(pipe.scheduler.config)
-  elif sampler == "unipc":
-    pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
-  elif sampler == "deis":
-    pipe.scheduler = DEISMultistepScheduler.from_config(pipe.scheduler.config)
-  else:
-    pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
-  
   if strength is None:
     strength = 1.0 - denoising_start
 
