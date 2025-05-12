@@ -139,7 +139,7 @@ def auto_pipeline(
         meta = PngImagePlugin.PngInfo()
         meta.add_text("pipeline", "img2img" if image is not None else "txt2img")
         meta.add_text("model", model)
-        meta.add_text("lora", lora)
+        meta.add_text("lora", f"{lora}")
         meta.add_text("prompt", prompt)
         meta.add_text("negative_prompt", f"{negative_prompt}")
         meta.add_text("image", f"{image}")
