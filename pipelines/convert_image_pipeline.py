@@ -4,6 +4,7 @@ import os
 def convert_image_pipeline(
   image: str,
   output_format: str,
+  output_name: str = "convert_image_pipeline",
   output_dir: str = "output",
   **kwargs,
 ):
@@ -17,6 +18,6 @@ def convert_image_pipeline(
   if output_dir is None:
     output_dir = os.path.dirname(image)
 
-  output_path = os.path.join(output_dir, f"convert_image_pipeline{ext}")
+  output_path = os.path.join(output_dir, f"{output_name}{ext}")
   img.save(output_path, output_format)
   return output_path
