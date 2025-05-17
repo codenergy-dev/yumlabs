@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import os
-from controlnet_aux import AnylineDetector, CannyDetector, HEDdetector, OpenposeDetector, SamDetector, ZoeDetector
+from controlnet_aux import AnylineDetector, CannyDetector, HEDdetector, OpenposeDetector, SamDetector, ContentShuffleDetector, ZoeDetector
 # from easy_dwpose import DWposeDetector
 from PIL import Image, ImageDraw
 
@@ -56,6 +56,12 @@ def controlnet_pipeline(
     output = os.path.join(output_dir, "seg.png")
     seg = SamDetector.from_pretrained("ybelkada/segment-anything", subfolder="checkpoints")
     seg(image_file).save(output)
+    pipe.append(output)
+  
+  if 'shuffle' in preprocessor:
+    output = os.path.join(output_dir, "shuffle.png")
+    shuffle = ContentShuffleDetector()
+    shuffle(image_file).save(output)
     pipe.append(output)
   
   if 'zoe' in preprocessor:
