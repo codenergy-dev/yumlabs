@@ -28,6 +28,8 @@ def auto_pipeline(
   control_guidance_end: float = 1.0,
   **kwargs,
 ):
+  if isinstance(controlnet, str):
+    controlnet = controlnet.split(',')
   if strength is None:
     strength = 1.0 - denoising_start
 
