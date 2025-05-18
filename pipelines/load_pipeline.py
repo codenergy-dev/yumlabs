@@ -17,6 +17,7 @@ def load_pipeline(
   model: str,
   controlnet: list[str] = [],
   lora: str = None,
+  lora_weights: float = 1.0,
   clip_skip: int = None,
   scheduler: str = 'unipc',
   device: str = 'cuda',
@@ -76,8 +77,16 @@ def load_pipeline(
   ).to(device)
 
   if lora is not None:
-    for lora in lora.split(','):
-      pipe.load_lora_weights(lora)
+    lora_names = []
+    for lora_path in lora.split(','):
+      pipe.load_lora_weights(lora_path)
+      lora_name = lora_path.strip().split("/")[-1]
+      lora_names.append(lora_name)
+
+    if not isinstance(lora_weights, str):
+      pipe.set_adapters(lora_names, adapter_weights=[lora_weights] * len(lora_names))
+    else:
+      pipe.set_adapters(lora_names, adapter_weights=[float(weight) for weight in lora_weights.split(",")])
   
   if clip_skip is not None and hasattr(pipe, "text_encoder") and hasattr(pipe.text_encoder.config, "clip_skip"):
     pipe.text_encoder.config.clip_skip = clip_skip
