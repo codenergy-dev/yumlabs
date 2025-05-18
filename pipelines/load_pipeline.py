@@ -79,8 +79,8 @@ def load_pipeline(
   if lora is not None:
     lora_names = []
     for lora_path in lora.split(','):
-      pipe.load_lora_weights(lora_path)
       lora_name = lora_path.strip().split("/")[-1]
+      pipe.load_lora_weights(lora_path, adapter_name=lora_name)
       lora_names.append(lora_name)
 
     if not isinstance(lora_weights, str):
