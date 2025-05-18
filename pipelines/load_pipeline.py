@@ -53,6 +53,8 @@ def load_pipeline(
       controlnet_model.append(ControlNetModel.from_pretrained("Eugeoter/noob-sdxl-controlnet-softedge_hed", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'pose' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
       controlnet_model.append(ControlNetModel.from_pretrained("thibaud/controlnet-openpose-sdxl-1.0", torch_dtype=torch_dtype))
+    elif 'scribble' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
+      controlnet_model.append(ControlNetModel.from_pretrained("xinsir/controlnet-scribble-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'zoe' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
       controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-zoe-depth-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
     else:
