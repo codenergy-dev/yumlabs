@@ -8,6 +8,7 @@ from diffusers import (
   DDPMScheduler,
   DPMSolverMultistepScheduler,
   EulerDiscreteScheduler,
+  LCMScheduler,
   UniPCMultistepScheduler,
 )
 import torch
@@ -117,6 +118,8 @@ def load_pipeline(
     pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
   elif scheduler == "deis":
     pipe.scheduler = DEISMultistepScheduler.from_config(pipe.scheduler.config)
+  elif scheduler == "lcm":
+    pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
   else:
     pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
   
