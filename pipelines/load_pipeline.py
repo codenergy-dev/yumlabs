@@ -61,12 +61,9 @@ def load_pipeline(
       controlnet_model.append(ControlNetModel.from_pretrained("xinsir/controlnet-tile-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'zoe' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
       controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-zoe-depth-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
-    else:
-      controlnet[index] = None
-  controlnet = [preprocessor for preprocessor in controlnet if preprocessor is not None]
     
   pipe_kwargs = {}
-  if len(controlnet):
+  if len(controlnet_model):
     pipe_kwargs["controlnet"] = controlnet_model
   if model == "stabilityai/stable-diffusion-xl-base-1.0":
     pipe_kwargs["vae"] = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch_dtype, use_safetensors=True)
@@ -128,6 +125,5 @@ def load_pipeline(
   return {
     "pipe": pipe,
     "model": model,
-    "controlnet": controlnet,
     "lora": lora,
   }
