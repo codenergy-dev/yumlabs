@@ -49,23 +49,23 @@ def load_pipeline(
       controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/control_v11f1e_sd15_tile", torch_dtype=torch_dtype))
     elif 'zoe' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
       controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-depth", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'canny' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
+    elif 'canny' in preprocessor and model in ["stabilityai/stable-diffusion-xl-base-1.0", "cagliostrolab/animagine-xl-4.0"]:
       controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'hed' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
+    elif 'hed' in preprocessor and model in ["stabilityai/stable-diffusion-xl-base-1.0", "cagliostrolab/animagine-xl-4.0"]:
       controlnet_model.append(ControlNetModel.from_pretrained("Eugeoter/noob-sdxl-controlnet-softedge_hed", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'pose' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
+    elif 'pose' in preprocessor and model in ["stabilityai/stable-diffusion-xl-base-1.0", "cagliostrolab/animagine-xl-4.0"]:
       controlnet_model.append(ControlNetModel.from_pretrained("thibaud/controlnet-openpose-sdxl-1.0", torch_dtype=torch_dtype))
-    elif 'scribble' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
+    elif 'scribble' in preprocessor and model in ["stabilityai/stable-diffusion-xl-base-1.0", "cagliostrolab/animagine-xl-4.0"]:
       controlnet_model.append(ControlNetModel.from_pretrained("xinsir/controlnet-scribble-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'tile' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
+    elif 'tile' in preprocessor and model in ["stabilityai/stable-diffusion-xl-base-1.0", "cagliostrolab/animagine-xl-4.0"]:
       controlnet_model.append(ControlNetModel.from_pretrained("xinsir/controlnet-tile-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'zoe' in preprocessor and model == "stabilityai/stable-diffusion-xl-base-1.0":
+    elif 'zoe' in preprocessor and model in ["stabilityai/stable-diffusion-xl-base-1.0", "cagliostrolab/animagine-xl-4.0"]:
       controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-zoe-depth-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
     
   pipe_kwargs = {}
   if len(controlnet_model):
     pipe_kwargs["controlnet"] = controlnet_model
-  if model == "stabilityai/stable-diffusion-xl-base-1.0":
+  if model in ["stabilityai/stable-diffusion-xl-base-1.0", "cagliostrolab/animagine-xl-4.0"]:
     pipe_kwargs["vae"] = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch_dtype, use_safetensors=True)
   
   pipe = (AutoPipelineForImage2Image if type == "img2img" else AutoPipelineForText2Image).from_pretrained(
