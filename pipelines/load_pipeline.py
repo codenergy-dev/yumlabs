@@ -7,6 +7,7 @@ from diffusers import (
   DDIMScheduler,
   DDPMScheduler,
   DPMSolverMultistepScheduler,
+  EulerAncestralDiscreteScheduler,
   EulerDiscreteScheduler,
   LCMScheduler,
   UniPCMultistepScheduler,
@@ -95,6 +96,8 @@ def load_pipeline(
     pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
   elif scheduler == "euler":
     pipe.scheduler = EulerDiscreteScheduler.from_config(pipe.scheduler.config)
+  elif scheduler == "euler-a":
+    pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
   elif scheduler == "dpmpp-2m":
     pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
     pipe.scheduler.algorithm_type = "dpmsolver++"
