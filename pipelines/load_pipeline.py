@@ -66,7 +66,7 @@ def load_pipeline(
   pipe_kwargs = {}
   if len(controlnet_model):
     pipe_kwargs["controlnet"] = controlnet_model
-  if model in ["stabilityai/stable-diffusion-xl-base-1.0", "cagliostrolab/animagine-xl-4.0"]:
+  if model in ["stabilityai/stable-diffusion-xl-base-1.0", "stabilityai/stable-diffusion-xl-refiner-1.0", "cagliostrolab/animagine-xl-4.0"]:
     pipe_kwargs["vae"] = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch_dtype, use_safetensors=True)
   
   pipe = (AutoPipelineForImage2Image if type == "img2img" else AutoPipelineForText2Image).from_pretrained(
