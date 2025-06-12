@@ -30,8 +30,6 @@ def auto_pipeline(
 ):
   if isinstance(controlnet, str):
     controlnet = controlnet.split(',')
-  if strength is None:
-    strength = 1.0 - denoising_start
 
   output = []
   for i in range(count):
@@ -40,7 +38,7 @@ def auto_pipeline(
     last_num_inference_steps = 0
 
     for num_inference_steps in range(1 if progress else num_inference_steps, num_inference_steps + 1):
-      curr_num_inference_steps = math.floor(num_inference_steps * strength)
+      curr_num_inference_steps = math.floor(num_inference_steps * (strength if strength else (denoising_end - denoising_start)))
       if curr_num_inference_steps == last_num_inference_steps:
         continue
       elif curr_num_inference_steps >= 1:
@@ -57,6 +55,7 @@ def auto_pipeline(
         meta.add_text("guidance_scale", f"{guidance_scale}")
         meta.add_text("seed", f"{current_seed}")
         meta.add_text("strength", f"{strength}")
+        meta.add_text("denoising_start", f"{denoising_start}")
         meta.add_text("denoising_end", f"{denoising_end}")
         meta.add_text("controlnet_conditioning_scale", f"{controlnet_conditioning_scale}")
         meta.add_text("control_guidance_start", f"{control_guidance_start}")
@@ -75,7 +74,8 @@ def auto_pipeline(
           width=width,
           height=height,
           strength=strength,
-          denoising_end=denoising_end,
+          denoising_start=None if strength else denoising_start,
+          denoising_end=None if strength else denoising_end,
           controlnet_conditioning_scale=[controlnet_conditioning_scale for preprocessor in controlnet],
           control_guidance_start=control_guidance_start,
           control_guidance_end=control_guidance_end,
