@@ -45,7 +45,7 @@ networkx==3.4.2
 numba==0.61.2
 numpy==1.26.4
 omegaconf==2.3.0
-onnxruntime==1.16.2
+onnxruntime==1.17.0
 opencv-contrib-python==4.11.0.86
 opencv-python==4.11.0.86
 opencv-python-headless==4.11.0.86
