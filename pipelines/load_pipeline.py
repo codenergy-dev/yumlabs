@@ -34,21 +34,21 @@ def load_pipeline(
     preprocessor = controlnet[index]
     if 'anyline' in preprocessor:
       controlnet_model.append(ControlNetModel.from_pretrained("TheMistoAI/MistoLine", variant="fp16", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'canny' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
+    elif 'canny' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2", "Anomaly-Games-Inc/aziibpixelmix-json"]:
       controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'hed' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
+    elif 'hed' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2", "Anomaly-Games-Inc/aziibpixelmix-json"]:
       controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-hed", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'pose' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
+    elif 'pose' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2", "Anomaly-Games-Inc/aziibpixelmix-json"]:
       controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-openpose", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'scribble' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2", "Anomaly-Games-Inc/aziibpixelmix-json"]:
       controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-scribble", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'shuffle' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2", "Anomaly-Games-Inc/aziibpixelmix-json"]:
       controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/control_v11e_sd15_shuffle", torch_dtype=torch_dtype, use_safetensors=True))
-    elif 'seg' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
+    elif 'seg' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2", "Anomaly-Games-Inc/aziibpixelmix-json"]:
       controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-seg", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'tile' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2", "Anomaly-Games-Inc/aziibpixelmix-json"]:
       controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/control_v11f1e_sd15_tile", torch_dtype=torch_dtype))
-    elif 'zoe' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2"]:
+    elif 'zoe' in preprocessor and model in ["stable-diffusion-v1-5/stable-diffusion-v1-5", "Lykon/AnyLoRA", "admruul/anything-v3.0", "Lykon/dreamshaper-7", "Lykon/dreamshaper-8", "proximasanfinetuning/fantassified_icons_v2", "Anomaly-Games-Inc/aziibpixelmix-json"]:
       controlnet_model.append(ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-depth", torch_dtype=torch_dtype, use_safetensors=True))
     elif 'canny' in preprocessor and model in ["stabilityai/stable-diffusion-xl-base-1.0", "cagliostrolab/animagine-xl-4.0"]:
       controlnet_model.append(ControlNetModel.from_pretrained("diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch_dtype, use_safetensors=True))
