@@ -5,6 +5,7 @@ import os
 from controlnet_aux import AnylineDetector, CannyDetector, HEDdetector, OpenposeDetector, SamDetector, ContentShuffleDetector, ZoeDetector
 # from easy_dwpose import DWposeDetector
 from PIL import Image, ImageDraw
+import torch
 
 def controlnet_pipeline(
   image: str,
@@ -12,12 +13,14 @@ def controlnet_pipeline(
   output_dir: str = "output",
   **kwargs,
 ):
+  device = "cuda" if torch.cuda.is_available() else "cpu"
+  
   image_file = Image.open(image).convert("RGB")
   pipe: list[str] = []
 
   if 'anyline' in preprocessor:
     output = os.path.join(output_dir, "anyline.png")
-    anyline = AnylineDetector.from_pretrained("TheMistoAI/MistoLine", filename="MTEED.pth", subfolder="Anyline")
+    anyline = AnylineDetector.from_pretrained("TheMistoAI/MistoLine", filename="MTEED.pth", subfolder="Anyline").to(device)
     anyline(image_file).save(output)
     pipe.append(output)
   
@@ -29,7 +32,7 @@ def controlnet_pipeline(
   
   if 'hed' in preprocessor:
     output = os.path.join(output_dir, "hed.png")
-    hed = HEDdetector.from_pretrained("lllyasviel/Annotators")
+    hed = HEDdetector.from_pretrained("lllyasviel/Annotators").to(device)
     hed(image_file).save(output)
     pipe.append(output)
   
@@ -66,7 +69,7 @@ def controlnet_pipeline(
   
   if 'zoe' in preprocessor:
     output = os.path.join(output_dir, "zoe.png")
-    zoe = ZoeDetector.from_pretrained("lllyasviel/Annotators")
+    zoe = ZoeDetector.from_pretrained("lllyasviel/Annotators").to(device)
     zoe(image_file).save(output)
     pipe.append(output)
   
