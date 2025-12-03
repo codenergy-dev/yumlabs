@@ -395,6 +395,7 @@ def get_style(name: str):
     {
       "name": "App Store",
       "prompt": "professional app store screenshot mockup, modern android device frame, marketing style, soft shadows, realistic phone mockup, app store promotional banner, {prompt}",
+      "negative_prompt": ""
     }
   ] if style["name"] == name), {
     "prompt": "{prompt}",
