@@ -391,6 +391,10 @@ def get_style(name: str):
       "name": "Tilt-Shift",
       "prompt": "Tilt-shift photo of {prompt} . Selective focus, miniature effect, blurred background, highly detailed, vibrant, perspective control",
       "negative_prompt": "blurry, noisy, deformed, flat, low contrast, unrealistic, oversaturated, underexposed"
+    },
+    {
+      "name": "App Store",
+      "prompt": "professional app store screenshot mockup, modern android device frame, marketing style, soft shadows, realistic phone mockup, app store promotional banner, {prompt}",
     }
   ] if style["name"] == name), {
     "prompt": "{prompt}",
