@@ -36,7 +36,10 @@ def device_frame_pipeline(
     
     # --- Home Bar (Bottom indicator) ---
     has_home_bar=True,
-    home_bar_color="#ffffff"
+    home_bar_color="#ffffff",
+
+    # --- Status Bar ---
+    status_bar_height=0
 ):
     """
     Wraps a screenshot in a highly customizable device frame.
@@ -45,6 +48,7 @@ def device_frame_pipeline(
     # 1. Load original image (Screenshot)
     try:
         img = Image.open(image).convert("RGBA")
+        img = img.crop((0, status_bar_height, img.size[0], img.size[1]))
     except FileNotFoundError:
         print(f"Error: File {image} not found.")
         return
